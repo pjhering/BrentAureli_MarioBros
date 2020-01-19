@@ -4,24 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.brentaureli.mariobros.MarioBros;
+import static com.brentaureli.mariobros.MarioBros.*;
 
 public class PlayScreen extends ScreenAdapter
 {
     private final MarioBros game;
-    Texture texture;
-    private OrthographicCamera gameCam;
-    private Viewport gamePort;
+    private final OrthographicCamera gameCam;
+    private final Viewport gamePort;
+    private final HUD hud;
 
     public PlayScreen (MarioBros game)
     {
         this.game = game;
-        this.texture = new Texture ("badlogic.jpg");
         this.gameCam = new OrthographicCamera ();
-        this.gamePort = new FitViewport (800, 480, gameCam);
+        this.gamePort = new FitViewport (V_WIDTH, V_HEIGHT, gameCam);
+        this.hud = new HUD (game.batch);
     }
 
     @Override
@@ -29,11 +29,9 @@ public class PlayScreen extends ScreenAdapter
     {
         Gdx.gl.glClearColor (0, 0, 0, 1);
         Gdx.gl.glClear (GL20.GL_COLOR_BUFFER_BIT);
+        
         game.batch.setProjectionMatrix (gameCam.combined);
-
-        game.batch.begin ();
-        game.batch.draw (texture, 0, 0);
-        game.batch.end ();
+        hud.stage.draw ();
     }
 
     @Override
@@ -45,6 +43,6 @@ public class PlayScreen extends ScreenAdapter
     @Override
     public void dispose ()
     {
-        texture.dispose ();
+        hud.dispose ();
     }
 }
